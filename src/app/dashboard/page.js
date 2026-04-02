@@ -7,7 +7,7 @@ import { logout } from '../../lib/auth';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
-  Zap, CheckCircle2, LogOut, Search,
+  Zap, CheckCircle2, LogOut, Search, Home,
   Trash2, Layout, BookOpen, ChevronLeft, ChevronUp,
   Save, Sparkles, PencilLine, Link as LinkIcon, Target,
   Award, Clock, Eye, Briefcase, ExternalLink,
@@ -168,6 +168,18 @@ export default function Dashboard() {
   const [toasts, setToasts]                   = useState([]);
   const [showIADrawer, setShowIADrawer]       = useState(false);
   const [showBacklinks, setShowBacklinks]     = useState(false);
+  const handleGoHome = () => {
+  router.push('/');
+};
+
+const handleLogout = async () => {
+  try {
+    await logout();
+    router.push('/');
+  } catch {
+    addToast("Erro ao sair da conta.", "error");
+  }
+};
 
   const addToast = useCallback((message, type = 'success') => {
     const id = Date.now();
@@ -320,14 +332,32 @@ export default function Dashboard() {
               <p className="text-[11px] font-bold text-white truncate uppercase italic tracking-tighter">{profile.displayName}</p>
             </div>
           </div>
-          <button onClick={() => logout()} className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-black text-red-500 hover:bg-red-500/10 transition-all uppercase tracking-widest text-[10px]">
-            <LogOut size={15}/> Encerrar
-          </button>
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-black text-red-500 hover:bg-red-500/10 transition-all uppercase tracking-widest text-[10px]">
+  <LogOut size={15}/> Encerrar
+</button>
         </div>
       </aside>
 
       {/* ── MAIN ── */}
       <main className="flex-grow overflow-y-auto h-screen pb-20 md:pb-0 scroll-smooth">
+         {/* Ações mobile */}
+<div className="md:hidden sticky top-0 z-[120] bg-[#F8F9FD]/95 backdrop-blur border-b border-slate-200 px-4 py-3 flex items-center justify-between">
+  <button
+    onClick={handleGoHome}
+    className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-700 shadow-sm active:scale-95 transition-all"
+  >
+    <Home size={14} />
+    Início
+  </button>
+
+  <button
+    onClick={handleLogout}
+    className="flex items-center gap-2 bg-red-50 border border-red-100 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-red-600 shadow-sm active:scale-95 transition-all"
+  >
+    <LogOut size={14} />
+    Sair
+  </button>
+</div>
 
         {/* Banner modo leitura */}
         {viewingArchive && (
